@@ -130,6 +130,8 @@ generated/TranscriptConsequences.java
       <xsd:enumeration value="nc_transcript_variant"/>
       <xsd:enumeration value="NMD_transcript_variant"/>
       <xsd:enumeration value="non_coding_exon_variant"/>
+      <xsd:enumeration value="non_coding_transcript_exon_variant"/>
+      <xsd:enumeration value="non_coding_transcript_variant"/>
       <xsd:enumeration value="non_conservative_amino_acid_substitution"/>
       <xsd:enumeration value="non_conservative_missense_variant"/>
       <xsd:enumeration value="plus_1_frameshift_variant"/>
@@ -195,6 +197,7 @@ generated/TranscriptConsequences.java
   </xsd:complexType>
   <xsd:complexType name="data">
     <xsd:sequence>
+      <xsd:element name="colocated_variants" type="colocated_variants" minOccurs="0" maxOccurs="unbounded"/>
       <xsd:element name="motif_feature_consequences" type="motif_feature_consequences" minOccurs="0" maxOccurs="unbounded"/>
       <xsd:element name="regulatory_feature_consequences" type="regulatory_feature_consequences" minOccurs="0" maxOccurs="unbounded"/>
       <xsd:element name="intergenic_consequences" type="intergenic_consequences" minOccurs="0" maxOccurs="unbounded"/>
@@ -208,6 +211,7 @@ generated/TranscriptConsequences.java
     <xsd:attribute name="seq_region_name" type="xsd:token"/>
     <xsd:attribute name="start" type="xsd:positiveInteger"/>
     <xsd:attribute name="strand" type="xsd:int"/>
+    <xsd:attribute name="variant_class" type="xsd:string"/>
     <xsd:attribute name="error" type="xsd:string"/>
   </xsd:complexType>
   <xsd:complexType name="abstract_consequences" abstract="true">
@@ -230,16 +234,64 @@ generated/TranscriptConsequences.java
     <xsd:complexContent>
       <xsd:extension base="abstract_consequences">
         <xsd:attribute name="regulatory_feature_id" type="xsd:normalizedString"/>
+        <xsd:attribute name="bp_overlap" type="xsd:positiveInteger"/>
+        <xsd:attribute name="biotype" type="xsd:normalizedString"/>
+        <xsd:attribute name="impact" type="xsd:normalizedString"/>
+        <xsd:attribute name="percentage_overlap" type="xsd:double"/>
       </xsd:extension>
     </xsd:complexContent>
+  </xsd:complexType>
+  <xsd:complexType name="colocated_variants">
+    <xsd:sequence>
+      <xsd:element name="clin_sig" type="xsd:normalizedString" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="pubmed" type="xsd:normalizedString" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+    <xsd:attribute name="allele_string" type="xsd:normalizedString"/>
+    <xsd:attribute name="end" type="xsd:positiveInteger"/>
+    <xsd:attribute name="id" type="xsd:normalizedString"/>
+    <xsd:attribute name="minor_allele" type="xsd:normalizedString"/>
+    <xsd:attribute name="minor_allele_freq" type="xsd:double"/>
+    <xsd:attribute name="phenotype_or_disease" type="xsd:positiveInteger"/>
+    <xsd:attribute name="seq_region_name" type="xsd:normalizedString"/>
+    <xsd:attribute name="start" type="xsd:positiveInteger"/>
+    <xsd:attribute name="strand" type="xsd:int"/>
+    <xsd:attribute name="somatic" type="xsd:positiveInteger"/>
+    <xsd:attribute name="aa_allele" type="xsd:normalizedString"/>
+    <xsd:attribute name="aa_maf" type="xsd:double"/>
+    <xsd:attribute name="afr_allele" type="xsd:normalizedString"/>
+    <xsd:attribute name="afr_maf" type="xsd:double"/>
+    <xsd:attribute name="amr_allele" type="xsd:normalizedString"/>
+    <xsd:attribute name="amr_maf" type="xsd:double"/>
+    <xsd:attribute name="asn_allele" type="xsd:normalizedString"/>
+    <xsd:attribute name="asn_maf" type="xsd:double"/>
+    <xsd:attribute name="ea_allele" type="xsd:normalizedString"/>
+    <xsd:attribute name="ea_maf" type="xsd:double"/>
+    <xsd:attribute name="eas_allele" type="xsd:normalizedString"/>
+    <xsd:attribute name="eas_maf" type="xsd:double"/>
+    <xsd:attribute name="eur_allele" type="xsd:normalizedString"/>
+    <xsd:attribute name="eur_maf" type="xsd:double"/>
+    <xsd:attribute name="sas_allele" type="xsd:normalizedString"/>
+    <xsd:attribute name="sas_maf" type="xsd:double"/>
   </xsd:complexType>
   <xsd:complexType name="transcript_consequences">
     <xsd:complexContent>
       <xsd:extension base="abstract_consequences">
         <xsd:sequence>
+          <xsd:element name="domains" minOccurs="0" maxOccurs="unbounded">
+            <xsd:complexType>
+              <xsd:attribute name="name" type="xsd:normalizedString"/>
+              <xsd:attribute name="db" type="xsd:normalizedString"/>
+            </xsd:complexType>
+          </xsd:element>
           <xsd:element name="refseq_transcript_ids" type="xsd:normalizedString" minOccurs="0" maxOccurs="unbounded"/>
         </xsd:sequence>
+        <xsd:attribute name="aa_maf" type="xsd:positiveInteger"/>
+        <xsd:attribute name="afr_maf" type="xsd:positiveInteger"/>
+        <xsd:attribute name="allele_num" type="xsd:positiveInteger"/>
         <xsd:attribute name="amino_acids" type="xsd:normalizedString"/>
+        <xsd:attribute name="amr_maf" type="xsd:positiveInteger"/>
+        <xsd:attribute name="asn_maf" type="xsd:positiveInteger"/>
+        <xsd:attribute name="bp_overlap" type="xsd:positiveInteger"/>
         <xsd:attribute name="biotype" type="xsd:token"/>
         <xsd:attribute name="canonical" type="xsd:positiveInteger"/>
         <xsd:attribute name="ccds" type="xsd:normalizedString"/>
@@ -247,26 +299,57 @@ generated/TranscriptConsequences.java
         <xsd:attribute name="cds_start" type="xsd:positiveInteger"/>
         <xsd:attribute name="cdna_end" type="xsd:positiveInteger"/>
         <xsd:attribute name="cdna_start" type="xsd:positiveInteger"/>
+        <xsd:attribute name="cell_type" type="xsd:normalizedString"/>
+        <xsd:attribute name="clin_sig" type="xsd:normalizedString"/>
         <xsd:attribute name="codons" type="xsd:normalizedString"/>
         <xsd:attribute name="distance" type="xsd:int"/>
+        <xsd:attribute name="ea_maf" type="xsd:positiveInteger"/>
+        <xsd:attribute name="eas_maf" type="xsd:positiveInteger"/>
+        <xsd:attribute name="ensp" type="xsd:normalizedString"/>
+        <xsd:attribute name="eur_maf" type="xsd:positiveInteger"/>
         <xsd:attribute name="exon" type="xsd:normalizedString"/>
+        <xsd:attribute name="freqs" type="xsd:normalizedString"/>
         <xsd:attribute name="gene_id" type="xsd:token"/>
         <xsd:attribute name="gene_symbol" type="xsd:normalizedString"/>
         <xsd:attribute name="gene_symbol_source" type="xsd:normalizedString"/>
+        <xsd:attribute name="gmafs" type="xsd:normalizedString"/>
+        <xsd:attribute name="hgvs_offset" type="xsd:positiveInteger"/>
         <xsd:attribute name="hgvsc" type="xsd:normalizedString"/>
         <xsd:attribute name="hgvsp" type="xsd:normalizedString"/>
         <xsd:attribute name="hgnc_id" type="xsd:normalizedString"/>
+        <xsd:attribute name="high_inf_pos" type="xsd:double"/>
+        <xsd:attribute name="impact" type="xsd:normalizedString"/>
+        <xsd:attribute name="ind" type="xsd:normalizedString"/>
         <xsd:attribute name="intron" type="xsd:normalizedString"/>
+        <xsd:attribute name="minimised" type="xsd:normalizedString"/>
+        <xsd:attribute name="motif_name" type="xsd:normalizedString"/>
+        <xsd:attribute name="motif_pos" type="xsd:normalizedString"/>
+        <xsd:attribute name="motif_score_change" type="xsd:normalizedString"/>
+        <xsd:attribute name="percentage_overlap" type="xsd:double"/>
+        <xsd:attribute name="pick" type="xsd:normalizedString"/>
         <xsd:attribute name="polyphen_score" type="xsd:double"/>
         <xsd:attribute name="polyphen_prediction" type="xsd:token"/>
         <xsd:attribute name="protein" type="xsd:normalizedString"/>
         <xsd:attribute name="protein_id" type="xsd:token"/>
         <xsd:attribute name="protein_end" type="xsd:positiveInteger"/>
         <xsd:attribute name="protein_start" type="xsd:positiveInteger"/>
+        <xsd:attribute name="pubmed" type="xsd:normalizedString"/>
+        <xsd:attribute name="refseq_match" type="xsd:normalizedString"/>
+        <xsd:attribute name="sas_maf" type="xsd:positiveInteger"/>
         <xsd:attribute name="sift_score" type="xsd:double"/>
         <xsd:attribute name="sift_prediction" type="xsd:token"/>
+        <xsd:attribute name="somatic" type="xsd:normalizedString"/>
         <xsd:attribute name="strand" type="xsd:int" default="0"/>
+        <xsd:attribute name="sv" type="xsd:normalizedString"/>
+        <xsd:attribute name="swissprot" type="xsd:normalizedString"/>
+        <xsd:attribute name="symbol" type="xsd:normalizedString"/>
+        <xsd:attribute name="symbol_source" type="xsd:normalizedString"/>
+        <xsd:attribute name="tsl" type="xsd:normalizedString"/>
         <xsd:attribute name="transcript_id" type="xsd:token"/>
+        <xsd:attribute name="trembl" type="xsd:normalizedString"/>
+        <xsd:attribute name="uniparc" type="xsd:normalizedString"/>
+        <xsd:attribute name="variant_class" type="xsd:normalizedString"/>
+        <xsd:attribute name="zyg" type="xsd:normalizedString"/>
       </xsd:extension>
     </xsd:complexContent>
   </xsd:complexType>
